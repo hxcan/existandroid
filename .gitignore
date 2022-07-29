@@ -1,0 +1,7 @@
+.directory
+.gradle/
+.idea/
+ExistAndroidStudio.iml
+libexist/build/
+libexist/libexist.iml
+local.properties
