@@ -81,6 +81,8 @@ public final class ExistMessage
       try
       {
         byte[] photoBytes= payloadData; //将照片文件内容全部读取。
+        Log.d(TAG, "parseFrom, data: " + photoBytes); // Debug.
+        
         CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
             
         String json_debug=videoStreamMessage.ToJSONString(); // Convert to sjon.
