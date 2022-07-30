@@ -87,13 +87,19 @@ public class PrimeThread extends Thread
 
 				ExistMessage videoStreamQueryResponseMessage= ExistMessage.parseFrom(payloadData); // 解析消息。
 				
-				ServicePublishMessage servicePublishMessage=ServicePublishMessage.parseFrom(videoStreamQueryResponseMessage.getServicePublishMessage()); // Parse the service publish message.
+				byte[] servicePublishMessageByteArray=videoStreamQueryResponseMessage.getServicePublishMessage();
+				
+				if (servicePublishMessageByteArray!=null) // It is valid pointer.
+				{
+				ServicePublishMessage servicePublishMessage=ServicePublishMessage.parseFrom(servicePublishMessageByteArray); // Parse the service publish message.
 
 				Log.d(TAG,"run, parsed ExistMessage. Service name: "+ servicePublishMessage.getName()+", sender address: "+ datagram.getAddress().toString()); //Debug.
 
 				//通知监听器：
 				serviceDiscoveredListener1.onServiceDiscovered(servicePublishMessage, datagram.getAddress()); //调用监听器的方法。
 
+				} // if (servicePublishMessageByteArray!=null) // It is valid pointer.
+				
 				releaseMulticastLock(); //释放组播锁。
 
 				Log.d(TAG,"run, released multicast lock."); //Debug.
