@@ -210,7 +210,12 @@ public class ServicePublisher
 
 				servicePublishMessageBuilder .setName(serviceObject.getServiceName()) .setPort(serviceObject.getServicePort()) .setProtocolType(serviceObject.getServiceProtocolType()); //设置各个参数。
 
-				translateRequestBuilder .setMessageType(ExistMessage.MessageType.SERVICEPUBLISH) .setServicePublishMessage(servicePublishMessageBuilder); //设置各个参数。
+								    CBORObject servicePublishCborObject= CBORObject.FromObject(servicePublishMessageBuilder); // 创建对象. Service publish message object.
+
+				byte[] servicePublisMessageByteArray=servicePublishCborObject.EncodeToBytes(); // Encode service publish message.
+
+// 				translateRequestBuilder .setMessageType(ExistMessage.MessageType.SERVICEPUBLISH) .setServicePublishMessage(servicePublishMessageBuilder); //设置各个参数。
+				translateRequestBuilder .setMessageType(ExistMessage.MessageType.SERVICEPUBLISH) .setServicePublishMessage(servicePublisMessageByteArray); //设置各个参数。
 
 				    CBORObject cborObject= CBORObject.FromObject(translateRequestBuilder); //创建对象
 

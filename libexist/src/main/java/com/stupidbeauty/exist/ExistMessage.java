@@ -38,9 +38,9 @@ package com.stupidbeauty.exist;
     }
 
     public static final int SERVICEPUBLISHMESSAGE_FIELD_NUMBER = 2;
-    private ServicePublishMessage servicePublishMessage_;
+    private byte[] servicePublishMessage_;
     
-    public ExistMessage setServicePublishMessage(ServicePublishMessage servicePublishMessage)
+    public ExistMessage setServicePublishMessage(byte[] servicePublishMessage)
     {
       servicePublishMessage_=servicePublishMessage;
       return this;
@@ -49,7 +49,7 @@ package com.stupidbeauty.exist;
     /**
      * <code>optional .com.stupidbeauty.exist.ServicePublishMessage servicePublishMessage = 2;</code>
      */
-    public ServicePublishMessage getServicePublishMessage() 
+    public byte[] getServicePublishMessage() 
     {
       return servicePublishMessage_;
     }
