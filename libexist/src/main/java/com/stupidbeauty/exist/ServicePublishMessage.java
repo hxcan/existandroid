@@ -1,10 +1,63 @@
 package com.stupidbeauty.exist;
 
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.util.Log;
+import com.upokecenter.cbor.CBORObject;
+import com.upokecenter.cbor.CBORObject;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import com.upokecenter.cbor.CBORException;
+import com.google.protobuf.ByteString;
+import android.Manifest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+* Protobuf type {@code com.stupidbeauty.exist.ServicePublishMessage}
+*/
+public final class ServicePublishMessage 
+{
+  private static final String TAG="ServicePublishMessage"; //!< 输出调试信息时使用的标记。
+
   /**
-   * Protobuf type {@code com.stupidbeauty.exist.ServicePublishMessage}
-   */
-  public final class ServicePublishMessage 
+  *  Parse the service publish message.
+  */
+  public static ServicePublishMessage parseFrom(byte[] videoStreamQueryResponseMessagegetServicePublishMessage) 
   {
+    ServicePublishMessage voicePackageNameMap=new ServicePublishMessage(); // he result.
+    
+    try
+    {
+      byte[] photoBytes= videoStreamQueryResponseMessagegetServicePublishMessage; //将照片文件内容全部读取。
+      CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
+            
+      String json_debug=videoStreamMessage.ToJSONString(); // Convert to sjon.
+
+      Log.d(TAG, "parseFrom, 45, json: " + json_debug); //Debug.
+
+      CBORObject currentText=videoStreamMessage; // 获取 Single map.
+
+      String packageName=currentText.get("name").AsString(); // 获取 package name.
+      int score=currentText.get("port").AsInt32(); // 获取 score.
+      String protocolType=currentText.get("protocolType").AsString(); // Get the protocol type.
+                
+      voicePackageNameMap.setName(packageName).setPort( score).setProtocolType(protocolType); // set attributes.
+    }
+    catch (CBORException e)
+    {
+      e.printStackTrace();
+    }
+
+    return voicePackageNameMap;
+    } // public static ServicePublishMessage parseFrom(byte[] videoStreamQueryResponseMessagegetServicePublishMessage)
+  
     public ServicePublishMessage()
     {
       this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); 

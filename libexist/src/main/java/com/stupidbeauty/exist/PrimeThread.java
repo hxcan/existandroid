@@ -5,7 +5,6 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -15,19 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * @author Hxcan
  *
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class PrimeThread extends Thread
 {
 	private final Context context; //!<无线网相关的上下文。
-
 	private static final String TAG="PrimeThread"; //!<输出调试信息时使用的标记。
 	private static final int BUFFER_LENGTH=1024; //!<缓冲区长度。
-
 	private final ServiceDiscoveredListener serviceDiscoveredListener1; //!<上下文。
 	private MulticastLock multicastLock; //!<多播锁。
 	private  InetAddress group; //!<广播组地址。
@@ -68,13 +63,12 @@ public class PrimeThread extends Thread
 		byte[] b=new byte[BUFFER_LENGTH];
 		DatagramPacket datagram =new DatagramPacket(b,b.length);
 
-
-
 		while(true)
 		{
 			//接收数据：
 
-			try {
+			try 
+			{
 				TimeUnit.SECONDS.sleep(2); //睡2秒。
 
 				acquireMulticastLock(); //获取多播锁。
@@ -91,15 +85,14 @@ public class PrimeThread extends Thread
 				byte[] payloadData=new byte[datagram.getLength()]; //负载数据。
 				System.arraycopy(datagram.getData(),0,payloadData,0, datagram.getLength());
 
+				ExistMessage videoStreamQueryResponseMessage= ExistMessage.parseFrom(payloadData); // 解析消息。
+				
+				ServicePublishMessage servicePublishMessage=ServicePublishMessage.parseFrom(videoStreamQueryResponseMessage.getServicePublishMessage()); // Parse the service publish message.
 
-				ExistMessageContainer.ExistMessage videoStreamQueryResponseMessage= ExistMessageContainer.ExistMessage.parseFrom(payloadData); //解析消息。
-
-
-				Log.d(TAG,"run, parsed ExistMessage. Service name: "+videoStreamQueryResponseMessage.getServicePublishMessage().getName()+", sender address: "+ datagram.getAddress().toString()); //Debug.
-
+				Log.d(TAG,"run, parsed ExistMessage. Service name: "+ servicePublishMessage.getName()+", sender address: "+ datagram.getAddress().toString()); //Debug.
 
 				//通知监听器：
-				serviceDiscoveredListener1.onServiceDiscovered(videoStreamQueryResponseMessage, datagram.getAddress()); //调用监听器的方法。
+				serviceDiscoveredListener1.onServiceDiscovered(servicePublishMessage, datagram.getAddress()); //调用监听器的方法。
 
 				releaseMulticastLock(); //释放组播锁。
 
@@ -145,48 +138,15 @@ public class PrimeThread extends Thread
 	 */
 	private void joinMulticastGroup() 
 	{
-		
-		try {
-			//224.0.0.0~239.255.255.255
-
-//Table 1 Multicast Address Range Assignments
-//
-//Description
-//Range
-//Reserved Link Local Addresses
-//
-//224.0.0.0/24
-//
-//Globally Scoped Addresses
-//
-//224.0.1.0 to 238.255.255.255
-//
-//Source Specific Multicast
-//
-//232.0.0.0/8
-//
-//GLOP Addresses
-//
-//233.0.0.0/8
-//
-//Limited Scope Addresses
-//
-//239.0.0.0/8
-//			
+		try 
+		{
 			group = InetAddress.getByName("239.173.40.5");
 			multiSocket=new MulticastSocket(PORT);
 			multiSocket.joinGroup(group);
-		} catch (IOException e) {
+		}
+		catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
 	} //private void joinMulticastGroup()
-
-	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	private final List<LanService> serviceList= new ArrayList<>(); //!<服务列表。
-
-	@SuppressWarnings("EmptyMethod")
-	private void GetCouponInfoListParseJson(String Jsn2Prs)
-	{
-	} // private void GetAreaListParseJson(String Jsn2Prs)
-
 }

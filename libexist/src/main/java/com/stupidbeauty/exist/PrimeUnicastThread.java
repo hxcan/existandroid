@@ -107,23 +107,19 @@ public class PrimeUnicastThread extends Thread
 						byte[] payloadData=new byte[datagram.getLength()]; //负载数据。
 						System.arraycopy(datagram.getData(),0,payloadData,0, datagram.getLength());
 
+						ExistMessage videoStreamQueryResponseMessage= ExistMessage.parseFrom(payloadData); //解析消息。
 
-						ExistMessageContainer.ExistMessage videoStreamQueryResponseMessage= ExistMessageContainer.ExistMessage.parseFrom(payloadData); //解析消息。
+						byte[] servicePublishMessageByteArray=videoStreamQueryResponseMessage.getServicePublishMessage();
 
+						ServicePublishMessage servicePublishMessage=ServicePublishMessage.parseFrom(servicePublishMessageByteArray); // Parse service publish message.
 
-						Log.d(TAG,"run, parsed ExistMessage. Service name: "+videoStreamQueryResponseMessage.getServicePublishMessage().getName()+", sender address: "+ datagram.getAddress().toString()); //Debug.
+            Log.d(TAG,"run, parsed ExistMessage. Service name: "+servicePublishMessage.getName()+", sender address: "+ datagram.getAddress().toString()); //Debug.
 
 						//通知监听器：
-						serviceDiscoveredListener1.onServiceDiscovered(videoStreamQueryResponseMessage, datagram.getAddress()); //调用监听器的方法。
-
-
-
-
+						serviceDiscoveredListener1.onServiceDiscovered(servicePublishMessage, datagram.getAddress()); //调用监听器的方法。
 
 						TimeUnit.SECONDS.sleep(5); //睡5秒。
-
 					} //else //长度不为0,则尝试处理。
-
 			}
 			catch (InterruptedException e) //被中断。
 			{
